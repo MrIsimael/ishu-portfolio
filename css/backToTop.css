@@ -1,0 +1,66 @@
+/* Back to Top Button */
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: var(--button-text-color);
+  border: 2px solid var(--border-color);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--button-shadow);
+  z-index: 999;
+}
+
+.back-to-top:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-3px);
+  box-shadow: var(--button-hover-shadow);
+}
+
+.back-to-top.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Light Mode Variables */
+:root {
+  --primary-color: #474559;
+  --primary-hover: #ffc200;
+  --button-text-color: #ffffff;
+  --border-color: rgba(0, 0, 0, 0.1);
+  --button-shadow: 0 2px 10px rgba(108, 99, 255, 0.3);
+  --button-hover-shadow: 0 4px 12px rgba(108, 99, 255, 0.4);
+}
+
+/* Dark Mode Variables */
+[data-theme="dark"] .back-to-top {
+  --primary-color: #7d75ff;
+  --primary-hover: #6c63ff;
+  --button-text-color: #ffffff;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --button-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  --button-hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .back-to-top {
+    width: 42px;
+    height: 42px;
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .back-to-top i {
+    font-size: 1.2rem;
+  }
+}

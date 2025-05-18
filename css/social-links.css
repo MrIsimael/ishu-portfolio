@@ -1,0 +1,49 @@
+.social-icons {
+    display: flex;
+    gap: 30px;
+    margin-top: 10px;
+    font-size: 1.8rem;
+  }
+  
+  .icon-link {
+    font-size: 1.5rem;
+    color: #666666; 
+    transition: color 0.3s ease;
+  }
+
+
+@media (max-width: 768px) {
+  .social-icons {
+    gap: 28px;            /* Slightly reduced spacing */
+    font-size: 1.6rem;    /* Slightly smaller container size */
+  }
+
+  .icon-link {
+    font-size: 1.4rem;    /* Slightly smaller icon size */
+  }
+}
+  
+ /* 🎯 Small screens adjustments */
+@media (max-width: 480px) {
+  .social-icons {
+    gap: 15px;           /* reduce gap */
+    font-size: 1.4rem;   /* reduce container font size */
+    justify-content: center; /* Center icons on very small screens */
+  }
+
+  .icon-link {
+    font-size: 1.2rem;   /* reduce icon size */
+  }
+}
+
+@media (max-width: 320px) {
+  .social-icons {
+    gap: 12px;            /* Minimum spacing between icons */
+    font-size: 1.3rem;    /* Further reduced container size */
+  }
+
+  .icon-link {
+    font-size: 1.1rem;    /* Smallest icon size for tiny screens */
+  }
+}
+  
