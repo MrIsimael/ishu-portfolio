@@ -182,7 +182,6 @@ document.addEventListener('DOMContentLoaded', function() {
       event.preventDefault();
     } else {
       // Show loading state on button
-      submitButton.innerHTML = '<span class="spinner"></span> Sending...';
       submitButton.disabled = true;
       
       // Optional: Send form data via AJAX instead of default form submission
@@ -275,173 +274,97 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-    /**
- * Contact form validation script
- * Can be added to the main JavaScript file or used separately
- */
-
-document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
   const contactForm = document.getElementById('contactForm');
   if (!contactForm) return;
-  
+
   const nameInput = document.getElementById('name');
   const emailInput = document.getElementById('email');
   const messageInput = document.getElementById('message');
   const submitButton = document.getElementById('submitBtn');
-  
-  // Email validation pattern
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  
-  // Validate all fields on submit
-  contactForm.addEventListener('submit', function(event) {
+
+  contactForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+
     let isValid = true;
-    
-    // Reset validation state
     resetValidation();
-    
-    // Validate name
+
     if (!nameInput.value.trim()) {
       isValid = false;
-      showError(nameInput, 'Please enter your name');
+      showError(nameInput, 'Please provide your name');
     }
-    
-    // Validate email
+
     if (!emailInput.value.trim()) {
       isValid = false;
-      showError(emailInput, 'Please enter your email address');
+      showError(emailInput, 'Please provide a valid email address');
     } else if (!emailPattern.test(emailInput.value.trim())) {
       isValid = false;
       showError(emailInput, 'Please enter a valid email address');
     }
-    
-    // Validate message
+
     if (!messageInput.value.trim()) {
       isValid = false;
-      showError(messageInput, 'Please enter your message');
+      showError(messageInput, 'Please write a message');
     }
-    
-    // If not valid, prevent form submission
-    if (!isValid) {
-      event.preventDefault();
-    } else {
-      // Show loading state on button
-      submitButton.innerHTML = '<span class="spinner"></span> Sending...';
-      submitButton.disabled = true;
-      
-      // Optional: Send form data via AJAX instead of default form submission
-      // This allows for more control over the submission process
-      /*
-      event.preventDefault();
-      
-      fetch('https://formspree.io/f/meogvqyk', {
-        method: 'POST',
-        body: new FormData(contactForm),
-        headers: {
-          'Accept': 'application/json'
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.ok) {
-          // Show success message
-          contactForm.innerHTML = '<div class="alert alert-success">Thank you for your message! I\'ll get back to you soon.</div>';
+
+    if (!isValid) return;
+
+    submitButton.disabled = true;
+
+    fetch('https://formspree.io/f/meogvqyk', {
+      method: 'POST',
+      body: new FormData(contactForm),
+      headers: {
+        'Accept': 'application/json'
+      }
+    })
+      .then(response => {
+        if (response.ok) {
+          contactForm.reset();
+          resetValidation();
+          showAlert('✅ Message sent successfully!', 'success');
         } else {
-          // Show error
-          showFormError('There was a problem sending your message. Please try again later.');
-          resetSubmitButton();
+          throw new Error();
         }
       })
-      .catch(error => {
-        showFormError('There was a problem sending your message. Please try again later.');
-        resetSubmitButton();
+      .catch(() => {
+        showAlert('❌ Failed to send. Please try again later.', 'danger');
+      })
+      .finally(() => {
+        submitButton.disabled = false;
       });
-      */
-    }
   });
-  
-  // Live validation for email field
-  emailInput.addEventListener('blur', function() {
-    if (emailInput.value.trim() && !emailPattern.test(emailInput.value.trim())) {
-      showError(emailInput, 'Please enter a valid email address');
-    } else {
-      clearError(emailInput);
-    }
-  });
-  
-  // Clear errors when user starts typing
-  const inputs = [nameInput, emailInput, messageInput];
-  inputs.forEach(input => {
-    input.addEventListener('input', function() {
-      clearError(input);
-    });
-  });
-  
-  // Helper functions
+
   function showError(input, message) {
     input.classList.add('is-invalid');
-    
-    // Find or create the error message element
-    let errorElement = input.nextElementSibling;
-    if (!errorElement || !errorElement.classList.contains('invalid-feedback')) {
-      errorElement = document.createElement('div');
-      errorElement.className = 'invalid-feedback';
-      input.parentNode.insertBefore(errorElement, input.nextSibling);
-    }
-    
-    errorElement.textContent = message;
+    const feedback = input.parentElement.querySelector('.invalid-feedback');
+    if (feedback) feedback.textContent = message;
   }
-  
+
   function clearError(input) {
     input.classList.remove('is-invalid');
+    const feedback = input.parentElement.querySelector('.invalid-feedback');
+    if (feedback) feedback.textContent = '';
   }
-  
+
   function resetValidation() {
-    inputs.forEach(input => clearError(input));
+    [nameInput, emailInput, messageInput].forEach(clearError);
   }
-  
-  function showFormError(message) {
-    // Create error alert if it doesn't exist
-    let errorAlert = document.querySelector('.form-error-alert');
-    if (!errorAlert) {
-      errorAlert = document.createElement('div');
-      errorAlert.className = 'alert alert-danger form-error-alert';
-      contactForm.prepend(errorAlert);
+
+  function showAlert(message, type) {
+    let alertBox = document.querySelector('.form-alert');
+    if (!alertBox) {
+      alertBox = document.createElement('div');
+      alertBox.className = `alert alert-${type} form-alert mt-3`;
+      contactForm.appendChild(alertBox);
     }
-    
-    errorAlert.textContent = message;
-    errorAlert.style.display = 'block';
-  }
-  
-  function resetSubmitButton() {
-    submitButton.innerHTML = 'Send Message';
-    submitButton.disabled = false;
+    alertBox.textContent = message;
+    alertBox.className = `alert alert-${type} form-alert mt-3`;
+
+    setTimeout(() => {
+      alertBox.remove();
+    }, 6000);
   }
 });
 
-// Back to Top Button
-const backToTopBtn = document.getElementById('backToTopBtn');
-
-window.addEventListener('scroll', () => {
-  if (window.pageYOffset > 300) {
-    backToTopBtn.classList.add('active');
-  } else {
-    backToTopBtn.classList.remove('active');
-  }
-});
-
-backToTopBtn.addEventListener('click', () => {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  });
-});
-
-// In your existing color mode toggle code
-function setTheme(theme) {
-  document.documentElement.setAttribute('data-theme', theme);
-  localStorage.setItem('theme', theme);
-}
-
-// Initialize theme
-const currentTheme = localStorage.getItem('theme') || 'light';
-setTheme(currentTheme);

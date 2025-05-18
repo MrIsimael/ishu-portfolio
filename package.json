@@ -1,5 +1,12 @@
 {
+  "homepage": "https://mrisimael.github.io/ishu-portfolio",
   "dependencies": {
     "@coreui/icons": "^3.0.1"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
+  },
+  "scripts": {
+    "deploy": "gh-pages -d ."
   }
 }
